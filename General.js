@@ -1,12 +1,10 @@
 var ArrayForSelect2 = [];
+var prepend_index = 2;
 
-$(document).ready(function(){
+$(document).ready(() => {
     SetStocksArray();
-    $('#select-1').select2({
-        data: ArrayForSelect2,
-        allowClear: true,
-        width: '100%'
-    });
+
+    setSelect2($('#select-1'), ArrayForSelect2);
 })
 
 $(document).on('select2:open', () => {
@@ -15,24 +13,26 @@ $(document).on('select2:open', () => {
     }, 10);
 });
 
-function checkMarketData(){
-    var $inp = $('#select-1');
+function checkMarketData(event){
+    var $ticker = $($(event.target).parent().parent()).find('select');
+    var $result = $($(event.target).parent().parent()).find('input');
+
     var url = '';
 
-    $.each(ArrayForSelect2, function(idx,elem){
-        if (elem.id == $inp.val()){
+    $.each(ArrayForSelect2,(idx,elem) => {
+        if (elem.id == $ticker.val()){
             url = 'https://iss.moex.com/iss/engines/stock/markets/shares/securities/' + elem.tickerName + '.json'
         }
     });
     $.ajax({
         method:"GET",
         url: url,
-        async: false,
+        async: true,
         crossdomain: true,
         dataType: 'json',
-        success: function(responce){
+        success: (responce) => {
             if (responce != null){
-                $('#input-2').val(responce.marketdata.data[0][18]);
+                $result.val(responce.marketdata.data[0][18]);
             }
         }
     })
@@ -48,17 +48,35 @@ function authMOEX(){
     })
 }
 
+function addTickerPanel(){
+    var panelHTML = `<div id="ticker-panel" class="panel panel-default col-lg-5" style="box-shadow: rgba(0, 0, 0, 0.4) 1px 2px 2px 2px; margin-top: 10px; margin-left: 10px;">
+                    <div class="panel-body">
+                        <div class="row" style="margin:10px; ">
+                            <div class="col-lg-6">
+                                <select id="select-${prepend_index}"></select>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" id="input-${prepend_index}" class="col-lg-4" style="margin-right: 10px; padding-left: 10px;">
+                                <button class="btn btn-sm btn-info col-lg-5" style="margin-bottom: 5px;" onclick="checkMarketData(event);">Get WAPRICE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+    $('#row-1').append(panelHTML);
+    setSelect2($('#select-' + prepend_index), ArrayForSelect2);
+    prepend_index++;
+}
+
 function SetStocksArray(){
     var url = 'https://iss.moex.com/iss/engines/stock/markets/shares/securities.json';
-    //var url = 'https://iss.moex.com/iss/securities.json';
-    //var url = 'https://iss.moex.com/iss/securities.json?engine=stock&start=100';
+
     $.ajax({
         method:"GET",
         url: url,
         async: false,
         crossdomain: true,
         dataType: 'json',
-        success: function(responce){
+        success: (responce) => {
             if (responce != undefined){
                 $.each(responce.securities.data, function(idx, elem){
                     if (arrayNotTiket(elem[0])){
@@ -71,10 +89,18 @@ function SetStocksArray(){
 }
 function arrayNotTiket(ticker){
     var result = true;
-    $.each(ArrayForSelect2, function(i,el){
+    $.each(ArrayForSelect2,(i,el) => {
         if (el.tickerName == ticker){
             result = false;
         }
     });
     return result;
+}
+
+function setSelect2(elem, array){
+    elem.select2({
+        data: array,
+        allowClear: true,
+        width: '100%'
+    });
 }

@@ -5,26 +5,25 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     </head>
     <body>
-        <div class="row" style="margin-top: 15px; margin-left: 10px;">
-            <div class="panel panel-default col-lg-6" style="box-shadow: rgba(0, 0, 0, 0.4) 1px 2px 2px 2px; margin-top: 10px;">
+        <div class="row">
+            <div>
+                <button class="btn btn-primary" onclick="addTickerPanel();">+</button>
+            </div>
+        </div>
+        <div class="row" id="row-1" style="margin-top: 15px;margin-left: 10px;">
+            <div id="ticker-panel" class="panel panel-default col-lg-5" style="box-shadow: rgba(0, 0, 0, 0.4) 1px 2px 2px 2px; margin-top: 10px; margin-left: 10px;">
                 <div class="panel-body">
                     <div class="row" style="margin:10px; ">
                         <div class="col-lg-6">
                             <select id="select-1"></select>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-6">
                             <input type="text" id="input-2" class="col-lg-4" style="margin-right: 10px; padding-left: 10px;">
-                            <button class="btn btn-sm btn-info col-lg-5" style="margin-bottom: 5px;" onclick="checkMarketData();">Get WAPRICE</button>
+                            <button class="btn btn-sm btn-info col-lg-5" style="margin-bottom: 5px;" onclick="checkMarketData(event);">Get WAPRICE</button>
                         </div>
-                        <!--
-                        <div class="col-lg-4">
-                            <button class="btn btn-sm btn-primary" onclick="authMOEX();">Auth</button>
-                        </div>
-                        -->
                     </div>
                 </div>
             </div>
-            
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
