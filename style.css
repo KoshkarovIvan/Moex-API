@@ -1,3 +1,14 @@
 button{
     margin-bottom: 10px;
 }
+.row{
+    margin: 10px;
+}
+.not-display{
+    display: none;
+}
+.ticker-panel{
+    box-shadow: rgba(61, 60, 60, 0.4) 1px 2px 2px 2px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
